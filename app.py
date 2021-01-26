@@ -2,7 +2,7 @@ import sqlite3
 from flask import Flask, request, g, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from models import db, Prova, Gabarito, Resposta
-
+from sqlalchemy.exc import IntegrityError
 
 #db.init_app(app)
 
@@ -14,74 +14,143 @@ def create_app():
     db.init_app(app)
     return app
 
-
 app = create_app()
 app.app_context().push()
 
 #Reinica o BD a cada inicialização
 db.drop_all()
-db.session.commit()
-
 db.create_all()
 db.session.commit()
 
 @app.route('/prova', methods=['POST'])
 def cadastrar_prova():
     try:
-        prova = Prova(id=request.json['id'], aluno=request.json['aluno'])
-        db.session.add(prova)
-        db.session.commit()
-        return jsonify(message="Prova criada com sucesso!")   
-    except Exception as e:
-        print(e)
+        if request.get_json() == None:
+            return jsonify(message="Apenas requisições JSON são válidas"), 400 
+        
+        if Prova.query.filter_by(matricula_aluno=request.json['matricula_aluno']).first() == None and len(db.session.query(Prova.matricula_aluno.distinct()).all()) >= 100:
+            return jsonify(mensagem='A quantidade máxima de 100 alunos já foi atingida')
+
+
+        if Prova.query.filter_by(id=request.json['id'], matricula_aluno=request.json['matricula_aluno']).first() == None:
+            prova = Prova(id=request.json['id'], matricula_aluno=request.json['matricula_aluno'])
+            db.session.add(prova)
+            db.session.commit()
+            return jsonify(message="Prova criada com sucesso!")
+
+        return jsonify(message='Prova ' + str(request.json['id']) + ' já existe para o aluno de matricula + ' + str(request.json['matricula_aluno']) + '.')
+
+    except KeyError:
+        return jsonify(
+                        message="Parâmetro especificado inválido",
+                        documentacao="https://github.com/mateussimashadlich/escola_alf/blob/master/README.md"
+                    ), 400                    
 
 @app.route('/gabarito', methods=['POST'])
 def cadastrar_gabarito():
- #   db = get_db()
-    if Prova.query.filter_by(id=request.json['id_prova']) == None:
-        return jsonify(mensagem='A prova especificada não existe')
+    try:
+        if request.get_json() == None:
+            return jsonify(message="Apenas requisições JSON são válidas"), 400 
 
-    for questao in request.json['questoes']:
-        gabarito = Gabarito(
-            id_prova = request.json['id_prova'],                        
-            num_questao = questao['num_questao'],
-            peso_questao = questao['peso_questao'],
-            alternativa = questao['alternativa']
-        )
-        db.session.add(gabarito)
-    print(Gabarito.query.all())
-    db.session.commit()
-    return jsonify(mensagem='Gabarito criado com sucesso!')
+        if Prova.query.filter_by(id=request.json['id_prova']).first() == None:
+            return jsonify(mensagem='A prova especificada não existe'), 404   
 
+        nota_total = 0.
+        for questao in request.json['questoes']:
+            if int(questao['peso_questao']) <= 0:
+                return jsonify(mensagem='O peso da questão ' + str(questao['num_questao']) + ' precisa ser um inteiro maior do que 0.'), 400
+
+            nota_total += questao['peso_questao']
+
+        if nota_total <= 0 or nota_total > 10:
+            return jsonify(mensagem='A nota da prova precisa estar acima de 0 e não ser maior do que 10'), 400
+
+        if Gabarito.query.filter_by(id_prova=request.json['id_prova']).first() != None:
+            return jsonify(mensagem='Já existe um gabarito para a prova ' +  str(request.json['id_prova']) + '.')
+            
+        for questao in request.json['questoes']:
+            gabarito = Gabarito(
+                id_prova = request.json['id_prova'],                        
+                num_questao = questao['num_questao'],
+                peso_questao = questao['peso_questao'],
+                alternativa = questao['alternativa']
+            )
+            db.session.add(gabarito)
+        
+        db.session.commit()
+        return jsonify(mensagem='Gabarito criado com sucesso!')
+
+    except KeyError:
+        return jsonify(
+                        message="Parâmetro especificado inválido",
+                        documentacao="https://github.com/mateussimashadlich/escola_alf/blob/master/README.md"
+                    ), 400         
+
+
+    
 @app.route('/resposta', methods=['POST'])
-def cadastrar_resposta():    
-    if Prova.query.filter_by(id=request.json['id_prova']).first() == None:
-        return jsonify(mensagem='A prova especificada não existe')
+def cadastrar_resposta():
+    try:
+        if request.get_json() == None:
+            return jsonify(message="Apenas requisições JSON são válidas"), 400
 
-    if len(db.session.query(Resposta.id_aluno.distinct().label("bla")).all()) == 100:
-        return jsonify(mensagem='A quantidade máxima de 100 alunos já foi atingida')
+        if Prova.query.filter_by(id=request.json['id_prova'], matricula_aluno=request.json['matricula_aluno']).first() == None:
+            return jsonify(mensagem='A prova especificada não existe'), 404
 
-    for resposta in request.json['respostas']:
-        resposta = Resposta(
-            id_prova = request.json['id_prova'],
-            id_aluno = request.json['id_aluno'],                        
-            num_questao = resposta['num_questao'],            
-            alternativa = resposta['alternativa']
-        )
-        db.session.add(resposta)
-    print(Resposta.query.all())
-    db.session.commit()
+        for resposta in request.json['respostas']:
+            if Gabarito.query.filter_by(id_prova=request.json['id_prova'], num_questao=resposta['num_questao']).first() == None:
+                return jsonify(mensagem='A questão ' + str(resposta['num_questao']) + ' não existe para a prova ' + str(request.json['id_prova']) + '.'), 404
+        
+
+        for resposta in request.json['respostas']:
+            resposta = Resposta(
+                id_prova = request.json['id_prova'],
+                matricula_aluno = request.json['matricula_aluno'],                        
+                num_questao = resposta['num_questao'],            
+                alternativa = resposta['alternativa']
+            )
+            db.session.add(resposta)
+
+        db.session.commit()
+        return jsonify(mensagem='Resposta(s) cadastrada(s) com sucesso!')
+    except KeyError:
+        return jsonify(
+                        message="Parâmetro especificado inválido",
+                        documentacao="https://github.com/mateussimashadlich/escola_alf/blob/master/README.md"
+                    ), 400
+    except IntegrityError as e:
+        db.session.rollback()
+        respostas_cadastradas = {}
+        for resposta in Resposta.query.filter_by(id_prova=request.json['id_prova'], matricula_aluno=request.json['matricula_aluno']).all():
+            respostas_cadastradas[resposta.num_questao] = resposta.alternativa
+        
+        return jsonify(
+                        message="Erro de integridade, não podem haver respostas duplicadas, verifique se não há números de questão duplicados.",
+                        respostas_cadastradas=respostas_cadastradas
+                    )                                  
+    
 
 @app.route('/nota_final', methods=['GET'])
 def get_nota_final_aluno():
-    return verificar_nota(request.json['aluno'])
+    try:
+        if request.get_json() == None:            
+            return jsonify(message="Apenas requisições JSON são válidas"), 400 
+        if Prova.query.filter_by(id=request.json['matricula_aluno']).first() == None:
+            return jsonify(mensagem='O aluno especificado não existe.'), 404
+
+        return verificar_nota(request.json['matricula_aluno'])
+    except KeyError:
+        return jsonify(
+                        message="Parâmetro especificado inválido",
+                        documentacao="https://github.com/mateussimashadlich/escola_alf/blob/master/README.md"
+                    ), 400          
 
 def verificar_nota(aluno):
     provas_aluno = Prova.query.filter_by(aluno=aluno).all()
     nota_final = 0
     for prova in provas_aluno:
         nota_prova = 0
-        respostas = Resposta.query.filter_by(id_prova=prova.id, id_aluno=prova.aluno).all()
+        respostas = Resposta.query.filter_by(id_prova=prova.id, matricula_aluno=prova.matricula_aluno).all()
         gabaritos = Gabarito.query.filter_by(id_prova=prova.id).all()
         for resposta in respostas:
             for gabarito in gabaritos:
@@ -95,16 +164,10 @@ def verificar_nota(aluno):
 
 @app.route('/alunos_aprovados', methods=['GET'])
 def get_alunos_aprovados():
-    alunos = db.session.query(Prova.aluno.distinct()).all()
-    for aluno in alunos:           
-        #aluno é uma tupla com o campo aluno da tabela prova dentro
-        #[!] jsonify retorna um objeto Reponse, temos que ver como pegar os valores dele
+    alunos = db.session.query(Prova.matricula_aluno.distinct()).all()
+    for aluno in alunos:
         if verificar_nota(aluno[0]).get_json()['nota_final'] < 7:
             alunos.remove(aluno)
-    return jsonify(alunos_aprovados=alunos)
-            
- 
-    print(request.json)
-    return request.json
+    return jsonify(matricula_alunos_aprovados=alunos)
 
 
