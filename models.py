@@ -1,16 +1,22 @@
-import mongoengine as me
+from flask_sqlalchemy import SQLAlchemy
 
-class Gabarito(me.Document):
-    id_prova = me.IntField()
-    num_questao = me.IntField()
-    peso_questao = me.IntField()
-    alternativa = me.StringField(max_length=1)    
+db = SQLAlchemy()
 
-class Resposta(me.Document):
-    gabarito = me.ReferenceField(Gabarito)
-    id_aluno = me.IntField
-    num_questao = me.IntField
-    alternativa = me.StringField(max_length=1)
+class Prova(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    aluno = db.Column(db.Integer, primary_key=True)
+
+class Gabarito(db.Model):
+    id_prova = db.Column(db.Integer, db.ForeignKey(Prova.id), primary_key=True)
+    num_questao = db.Column(db.Integer, primary_key=True)
+    peso_questao = db.Column(db.Integer)
+    alternativa = db.Column(db.String(1))
+
+class Resposta(db.Model):
+    id_prova = db.Column(db.Integer, db.ForeignKey(Prova.id), primary_key=True)
+    id_aluno = db.Column(db.Integer, db.ForeignKey(Prova.aluno), primary_key=True)
+    num_questao = db.Column(db.Integer, primary_key=True)
+    alternativa = db.Column(db.String(1))
          
 #FOREIGN KEY(id_prova) REFERENCES gabarito(id_prova),
 #PRIMARY KEY(id_prova, id_aluno, num_questao)
