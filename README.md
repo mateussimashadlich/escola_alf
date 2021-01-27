@@ -25,7 +25,6 @@ A API disponibiliza os seguintes endpoints:
   <p><blockquote>Este endpoint aceita apenas dados formatados em JSON.</blockquote></p>
   <p>Cria uma prova atrelada a um aluno.</p>
   <h4>Parâmetros</h4>
-  <code>
     <table>
       <tr>
         <td><strong>Nome</strong></td>
