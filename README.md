@@ -14,14 +14,13 @@
 <h2>Endpoints</h2>
 A API disponibiliza os seguintes endpoints:
 <ul>
-  <li>[Cadastrar prova](#/prova)</a></li>
-  <li><a href="#post-prova">Cadastrar gabarito da prova</a></li>
-  <li><a href="https://github.com/mateussimashadlich/escola_alf/README.md#post-prova">Cadastrar respostas do aluno</a></li>
-  <li><a href="#">Verificar nota final do aluno</a></li>
-  <li><a href="#">Listar alunos aprovados</a></li>
+  <li><a href="#post-prova">Cadastrar prova</a></li>
+  <li><a href="#post-gabarito">Cadastrar gabarito da prova</a></li>
+  <li><a href="#post-resposta">Cadastrar respostas do aluno</a></li>
+  <li><a href="#get-notafinal">Verificar nota final do aluno</a></li>
+  <li><a href="#get-alunosaprovados">Listar alunos aprovados</a></li>
 </ul>
 <br>
-## Prova
 <h3><code>POST /prova</code></h3>
   <p><blockquote>Este endpoint aceita apenas dados formatados em JSON.</blockquote></p>
   <h4>Parâmetros</h4>
