@@ -192,4 +192,33 @@ A API disponibiliza os seguintes endpoints:
       </code></pre>
     <pre><code>curl --header "Content-Type: application/json" --request POST --data '{respostas_aluno}' http://127.0.0.1:5000/resposta</code></pre>
 </section>
-<section id="
+<section id="/nota_final">
+  <h3><code>GET /nota_final</code></h3>
+  <p><blockquote>Este endpoint aceita apenas dados formatados em JSON.</blockquote></p>
+  <h4>Parâmetros</h4>
+  <table>
+    <tr>
+      <td><strong>Nome</strong></td>
+      <td><strong>Tipo de dado</strong></td>
+      <td><strong>Obrigatório</strong></td>
+      <td><strong>Descrição</strong></td>
+    </tr>
+    <tr>
+      <td><i>matricula_aluno</i></td>
+      <td>int</td>
+      <td>Sim</td>
+      <td>Matricula do aluno</td>
+    </tr>
+  </table>
+  <pre><code>
+  #Ex:   
+  {
+    "matricula_aluno": 1
+  }
+  </code></pre>
+  <pre><code>curl -X GET -H "Content-type: application/json" -d '{matricula_aluno}' 'http://127.0.0.1:5000/nota_final'</code></pre>
+</section>
+<section id="/alunos_aprovados">
+  <h3><code>GET /alunos_aprovados</code></h3>    
+  <pre><code>curl -X GET 'http://127.0.0.1:5000/alunos_aprovados'</code></pre>  
+</section>
