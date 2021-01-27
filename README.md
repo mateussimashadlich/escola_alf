@@ -17,12 +17,13 @@ A API disponibiliza os seguintes endpoints:
   <li><a href="#post-prova">Cadastrar prova</a></li>
   <li><a href="#post-gabarito">Cadastrar gabarito da prova</a></li>
   <li><a href="#post-resposta">Cadastrar respostas do aluno</a></li>
-  <li><a href="#get-notafinal">Verificar nota final do aluno</a></li>
-  <li><a href="#get-alunosaprovados">Listar alunos aprovados</a></li>
+  <li><a href="#get-nota_final">Verificar nota final do aluno</a></li>
+  <li><a href="#get-alunos_aprovados">Listar alunos aprovados</a></li>
 </ul>
 <br>
 <h3><code>POST /prova</code></h3>
   <p><blockquote>Este endpoint aceita apenas dados formatados em JSON.</blockquote></p>
+  <p>Cria uma prova atrelada a um aluno.</p>
   <h4>Parâmetros</h4>
   <code>
     <table>
@@ -46,11 +47,18 @@ A API disponibiliza os seguintes endpoints:
       </tr>      
     </table>
     <pre><code>curl --header "Content-Type: application/json" --request POST --data '{"id": <valor>, "matricula_aluno": <valor>}" http://127.0.0.1:5000/prova</code></pre>
+    <p>Exemplo de resposta em uma requisição bem-sucedida:</p>
+    <pre><code>  
+    {
+      "mensagem": "Prova criada com sucesso!"
+    } 
+    </code></pre>
 </section>
 <br>
 <section id="/gabarito">
 <h3><code>POST /gabarito</code></h3>
   <p><blockquote>Este endpoint aceita apenas dados formatados em JSON.</blockquote></p>
+  <p>Cria um gabarito para uma prova previamente criada.</p>
   <h4>Parâmetros</h4>
     <table>
       <tr>
@@ -119,11 +127,18 @@ A API disponibiliza os seguintes endpoints:
     }
     </code></pre>
   <pre><code>curl --header "Content-Type: application/json" --request POST --data '{gabarito}' http://127.0.0.1:5000/gabarito</code></pre>
+  <p>Exemplo de resposta em uma requisição bem-sucedida:</p>
+  <pre><code>  
+    {
+      "mensagem": "Gabarito criado com sucesso!"
+    } 
+  </code></pre>
 </section>
 <br>
 <section id="/resposta">
   <h3><code>POST /resposta</code></h3>
     <p><blockquote>Este endpoint aceita apenas dados formatados em JSON.</blockquote></p>
+    <p>Registra as respostas do aluno para a sua prova.</p>
     <h4>Parâmetros</h4>
       <table>
         <tr>
@@ -191,10 +206,17 @@ A API disponibiliza os seguintes endpoints:
       }
       </code></pre>
     <pre><code>curl --header "Content-Type: application/json" --request POST --data '{respostas_aluno}' http://127.0.0.1:5000/resposta</code></pre>
+  <p>Exemplo de resposta em uma requisição bem-sucedida:</p>
+  <pre><code>  
+  {
+    "mensagem": "Resposta(s) cadastrada(s) com sucesso!"
+  }
+  </code></pre>
 </section>
 <section id="/nota_final">
   <h3><code>GET /nota_final</code></h3>
   <p><blockquote>Este endpoint aceita apenas dados formatados em JSON.</blockquote></p>
+  <p>Retorna a nota final do aluno, baseado na média aritmética de suas provas.</p>
   <h4>Parâmetros</h4>
   <table>
     <tr>
@@ -217,8 +239,22 @@ A API disponibiliza os seguintes endpoints:
   }
   </code></pre>
   <pre><code>curl -X GET -H "Content-type: application/json" -d '{matricula_aluno}' 'http://127.0.0.1:5000/nota_final'</code></pre>
+  <p>Exemplo de resposta:</p>
+  <pre><code>  
+  {
+    "nota_final": 6.5
+  }
+  </code></pre>
 </section>
+<br>
 <section id="/alunos_aprovados">
   <h3><code>GET /alunos_aprovados</code></h3>    
-  <pre><code>curl -X GET 'http://127.0.0.1:5000/alunos_aprovados'</code></pre>  
+  <p>Lista todos os alunos com média de notas maior ou igual a 7, ou seja, aprovados.</p>
+  <pre><code>curl -X GET 'http://127.0.0.1:5000/alunos_aprovados'</code></pre>
+  <p>Exemplo de resposta:</p>
+  <pre><code>  
+  {
+    "matricula_alunos_aprovados": [1234, 5678]
+  }
+  </code></pre>
 </section>
