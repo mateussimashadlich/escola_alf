@@ -23,7 +23,7 @@
 </ul>
 <h3><code>POST /prova</code></h3>
   <p><blockquote>Este endpoint aceita apenas dados formatados em JSON.</blockquote></p>
-  <p>Cria uma prova atrelada a um aluno.</p>
+  <p>Cadastra uma prova com uma matricula de aluno. Não é possível ter mais de 100 alunos diferentes cadastrados em todas as provas.</p>
   <h4>Parâmetros</h4>
     <table>
       <tr>
@@ -57,7 +57,7 @@
 <section id="/gabarito">
 <h3><code>POST /gabarito</code></h3>
   <p><blockquote>Este endpoint aceita apenas dados formatados em JSON.</blockquote></p>
-  <p>Cria um gabarito para uma prova previamente criada.</p>
+  <p>Cria um gabarito para uma prova previamente criada, a soma dos pontos das questões precisa estar acima de 0 e não ser maior do que 10.</p>
   <h4>Parâmetros</h4>
     <table>
       <tr>
