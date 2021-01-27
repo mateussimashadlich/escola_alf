@@ -12,7 +12,7 @@
 <p>Agora para executar a aplicação, vá até a pasta do projeto e digite:</p>
 <p><code>flask run</code></p>
 <p>O arquivo app.py será executado e o servidor da API será inicializado.</p>
-<h3Endpoints</h3>
+<h3>Endpoints</h3>
 <p>A API disponibiliza os seguintes endpoints:</p>
 <ul>
   <li><a href="#post-prova">Cadastrar prova</a></li>
