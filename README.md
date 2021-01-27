@@ -14,14 +14,14 @@
 <h2>Endpoints</h2>
 A API disponibiliza os seguintes endpoints:
 <ul>
-  <li><a href="/prova">Cadastrar prova</a></li>
-  <li><a href="/gabarito">Cadastrar gabarito da prova</a></li>
-  <li><a href="#">Cadastrar respostas do aluno</a></li>
+  <li>[Cadastrar prova](#/prova)</a></li>
+  <li><a href="#post-prova">Cadastrar gabarito da prova</a></li>
+  <li><a href="https://github.com/mateussimashadlich/escola_alf/README.md#post-prova">Cadastrar respostas do aluno</a></li>
   <li><a href="#">Verificar nota final do aluno</a></li>
   <li><a href="#">Listar alunos aprovados</a></li>
 </ul>
 <br>
-<section id="/prova">
+## Prova
 <h3><code>POST /prova</code></h3>
   <p><blockquote>Este endpoint aceita apenas dados formatados em JSON.</blockquote></p>
   <h4>Parâmetros</h4>
@@ -85,20 +85,109 @@ A API disponibiliza os seguintes endpoints:
         <td>num_questao</td>
         <td>int</td>
         <td>Sim</td>
-        <td>Número da questão</td>
+        <td>Número da questão.</td>
       </tr>
       <tr>
         <td>peso_questao</td>
         <td>int</td>
         <td>Sim</td>
-        <td>Peso da questão</td>
+        <td>Peso da questão.</td>
       </tr>
       <tr>
         <td>alternativa</td>
         <td>string</td>
         <td>Sim</td>
-        <td>Alternativa correta da questão (Ex: A)</td>
+        <td>Alternativa correta da questão (Ex: A).</td>
       </tr>      
     </table>
-  <pre><code>curl --header "Content-Type: application/json" --request POST --data '{"id_prova": valor, "questoes": array_questoes}' http://127.0.0.1:5000/gabarito</code></pre>
+    <pre><code>
+    #Ex. Gabarito    
+    {
+      "id_prova": 1,
+      "questoes":[
+        {
+            "num_questao": 1,
+            "peso_questao": 1,
+            "alternativa": "A"
+        },
+        {
+            "num_questao": 2,
+            "peso_questao": 1,
+            "alternativa": "C"
+        }
+      ]
+    }
+    </code></pre>
+  <pre><code>curl --header "Content-Type: application/json" --request POST --data '{gabarito}' http://127.0.0.1:5000/gabarito</code></pre>
+</section>
+  <section id="/resposta">
+<h3><code>POST /resposta</code></h3>
+  <p><blockquote>Este endpoint aceita apenas dados formatados em JSON.</blockquote></p>
+  <h4>Parâmetros</h4>
+    <table>
+      <tr>
+        <td><strong>Nome</strong></td>
+        <td><strong>Tipo de dado</strong></td>
+        <td><strong>Obrigatório</strong></td>
+        <td><strong>Descrição</strong></td>
+      </tr>
+      <tr>
+        <td><i>id_prova</i></td>
+        <td>int</td>
+        <td>Sim</td>
+        <td>Identificador da prova ao qual a resposta corresponde.</td>
+      </tr>
+      <tr>
+        <td><i>matricula_aluno</i></td>
+        <td>int</td>
+        <td>Sim</td>
+        <td>Matricula do aluno que realizou as respostas.</td>        
+      </tr>
+      <tr>
+        <td><i>respostas</i></td>
+        <td>list</td>
+        <td>Sim</td>
+        <td>Respostas do aluno.</td>        
+      </tr>      
+    </table>
+    <h4>Resposta</h4>
+    <p>Cada questão também precisa estar formatada em JSON, seguindo o modelo de dicionários do Python.</p>
+    <table>
+      <tr>
+        <td><strong>Nome</strong></td>
+        <td><strong>Tipo de dado</strong></td>
+        <td><strong>Obrigatório</strong></td>
+        <td><strong>Descrição</strong></td>          
+      </tr>
+      <tr>
+        <td>num_questao</td>
+        <td>int</td>
+        <td>Sim</td>
+        <td>Número da questão.</td>
+      </tr>
+      <tr>
+        <td>alternativa</td>
+        <td>string</td>
+        <td>Sim</td>
+        <td>Alternativa utilizada como resposta para a questão.</td>
+      </tr>      
+    </table>
+    <pre><code>
+    #Ex. Respostas   
+    {
+      "id_prova": 1,
+      "matricula_aluno": 1,
+      "respostas":[
+        {
+            "num_questao": 1,
+            "alternativa": "A"
+        },
+        {
+            "num_questao": 2,
+            "alternativa": "E"
+        }
+      ]
+    }
+    </code></pre>
+  <pre><code>curl --header "Content-Type: application/json" --request POST --data '{respostas_aluno}' http://127.0.0.1:5000/resposta</code></pre>
 </section>
