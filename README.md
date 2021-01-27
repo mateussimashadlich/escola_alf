@@ -46,7 +46,7 @@ A API disponibiliza os seguintes endpoints:
         <td>Matricula do aluno que fará a prova</td>
       </tr>      
     </table>
-    <pre><code>curl --header "Content-Type: application/json" --request POST --data '{"id": <valor>, "matricula_aluno": <valor>}" http://127.0.0.1:5000/prova</code></pre>
+    <pre><code>curl --header "Content-Type: application/json" --request POST --data '{"id": id, "matricula_aluno": matricula_aluno}" http://127.0.0.1:5000/prova</code></pre>
     <p>Exemplo de resposta em uma requisição bem-sucedida:</p>
     <pre><code>  
     {
@@ -108,8 +108,8 @@ A API disponibiliza os seguintes endpoints:
         <td>Alternativa correta da questão (Ex: A).</td>
       </tr>      
     </table>
+    <p>Exemplo de dados em uma requisição:</p>
     <pre><code>
-    #Ex. Gabarito    
     {
       "id_prova": 1,
       "questoes":[
@@ -131,14 +131,13 @@ A API disponibiliza os seguintes endpoints:
   <pre><code>  
     {
       "mensagem": "Gabarito criado com sucesso!"
-    } 
-  </code></pre>
+    }</code></pre>
 </section>
 <br>
 <section id="/resposta">
   <h3><code>POST /resposta</code></h3>
     <p><blockquote>Este endpoint aceita apenas dados formatados em JSON.</blockquote></p>
-    <p>Registra as respostas do aluno para a sua prova.</p>
+    <p>Registra as respostas do aluno para a prova dele.</p>    
     <h4>Parâmetros</h4>
       <table>
         <tr>
@@ -188,8 +187,8 @@ A API disponibiliza os seguintes endpoints:
           <td>Alternativa utilizada como resposta para a questão.</td>
         </tr>      
       </table>
+      <p>Exemplo de dados em uma requisição:</p>
       <pre><code>
-      #Ex. Respostas   
       {
         "id_prova": 1,
         "matricula_aluno": 1,
@@ -203,15 +202,13 @@ A API disponibiliza os seguintes endpoints:
               "alternativa": "E"
           }
         ]
-      }
-      </code></pre>
+      }</code></pre>
     <pre><code>curl --header "Content-Type: application/json" --request POST --data '{respostas_aluno}' http://127.0.0.1:5000/resposta</code></pre>
   <p>Exemplo de resposta em uma requisição bem-sucedida:</p>
   <pre><code>  
   {
     "mensagem": "Resposta(s) cadastrada(s) com sucesso!"
-  }
-  </code></pre>
+  }</code></pre>
 </section>
 <section id="/nota_final">
   <h3><code>GET /nota_final</code></h3>
@@ -232,8 +229,8 @@ A API disponibiliza os seguintes endpoints:
       <td>Matricula do aluno</td>
     </tr>
   </table>
+  <p>Exemplo de dados em uma requisição:</p>
   <pre><code>
-  #Ex:   
   {
     "matricula_aluno": 1
   }
@@ -243,8 +240,7 @@ A API disponibiliza os seguintes endpoints:
   <pre><code>  
   {
     "nota_final": 6.5
-  }
-  </code></pre>
+  }</code></pre>
 </section>
 <br>
 <section id="/alunos_aprovados">
@@ -255,6 +251,5 @@ A API disponibiliza os seguintes endpoints:
   <pre><code>  
   {
     "matricula_alunos_aprovados": [1234, 5678]
-  }
-  </code></pre>
+  }</code></pre>
 </section>
