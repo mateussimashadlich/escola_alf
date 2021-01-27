@@ -23,7 +23,7 @@ A API disponibiliza os seguintes endpoints:
 <br>
 <section id="/prova">
 <h3><code>POST /prova</code></h3>
-  <p>Este endpoint aceita apenas dados formatados em JSON.</p>
+  <p><blockquote>Este endpoint aceita apenas dados formatados em JSON.</blockquote></p>
   <h4>Parâmetros</h4>
   <code>
     <table>
@@ -46,14 +46,12 @@ A API disponibiliza os seguintes endpoints:
         <td>Matricula do aluno que fará a prova</td>
       </tr>      
     </table>
-    <p>curl --header "Content-Type: application/json" --request POST --data '{"id": <valor>, "matricula_aluno": <valor>}" http://127.0.0.1:5000/prova</p>
-  </code>
+    <pre><code>curl --header "Content-Type: application/json" --request POST --data '{"id": <valor>, "matricula_aluno": <valor>}" http://127.0.0.1:5000/prova</code></pre>
 </section>
 <section id="/gabarito">
 <h3><code>POST /gabarito</code></h3>
-  <p>Este endpoint aceita apenas dados formatados em JSON.</p>
+  <p><blockquote>Este endpoint aceita apenas dados formatados em JSON.</blockquote></p>
   <h4>Parâmetros</h4>
-  <code>
     <table>
       <tr>
         <td><strong>Nome</strong></td>
@@ -73,22 +71,34 @@ A API disponibiliza os seguintes endpoints:
         <td>Sim</td>
         <td>Lista de questões atreladas ao gabarito</td>        
       </tr>
-      <h5>Questao</h5>
-      <table>
-        <tr>
-          <td><strong>Nome</strong></td>
-          <td><strong>Tipo de dado</strong></td>
-          <td><strong>Obrigatório</strong></td>
-          <td><strong>Descrição</strong></td>          
-        </tr>
-        <tr>
-          <td>num_questao</td>
-          <td>int</td>
-          <td>Sim</td>
-          <td>Número da questão</td>
-        </tr>
-      </table>
     </table>
-    <p>curl --header "Content-Type: application/json" --request POST --data '{"id": <valor>, "matricula_aluno": <valor>}" http://127.0.0.1:5000/prova</p>
-  </code>
+    <h4>Questao</h4>
+    <p>Cada questão também precisa estar formatada em JSON, seguindo o modelo de dicionários do Python.</p>
+    <table>
+      <tr>
+        <td><strong>Nome</strong></td>
+        <td><strong>Tipo de dado</strong></td>
+        <td><strong>Obrigatório</strong></td>
+        <td><strong>Descrição</strong></td>          
+      </tr>
+      <tr>
+        <td>num_questao</td>
+        <td>int</td>
+        <td>Sim</td>
+        <td>Número da questão</td>
+      </tr>
+      <tr>
+        <td>peso_questao</td>
+        <td>int</td>
+        <td>Sim</td>
+        <td>Peso da questão</td>
+      </tr>
+      <tr>
+        <td>alternativa</td>
+        <td>string</td>
+        <td>Sim</td>
+        <td>Alternativa correta da questão (Ex: A)</td>
+      </tr>      
+    </table>
+  <pre><code>curl --header "Content-Type: application/json" --request POST --data '{"id_prova": valor, "questoes": array_questoes}' http://127.0.0.1:5000/gabarito</code></pre>
 </section>
