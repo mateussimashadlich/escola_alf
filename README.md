@@ -47,6 +47,7 @@ A API disponibiliza os seguintes endpoints:
     </table>
     <pre><code>curl --header "Content-Type: application/json" --request POST --data '{"id": <valor>, "matricula_aluno": <valor>}" http://127.0.0.1:5000/prova</code></pre>
 </section>
+<br>
 <section id="/gabarito">
 <h3><code>POST /gabarito</code></h3>
   <p><blockquote>Este endpoint aceita apenas dados formatados em JSON.</blockquote></p>
@@ -119,74 +120,76 @@ A API disponibiliza os seguintes endpoints:
     </code></pre>
   <pre><code>curl --header "Content-Type: application/json" --request POST --data '{gabarito}' http://127.0.0.1:5000/gabarito</code></pre>
 </section>
-  <section id="/resposta">
-<h3><code>POST /resposta</code></h3>
-  <p><blockquote>Este endpoint aceita apenas dados formatados em JSON.</blockquote></p>
-  <h4>Parâmetros</h4>
-    <table>
-      <tr>
-        <td><strong>Nome</strong></td>
-        <td><strong>Tipo de dado</strong></td>
-        <td><strong>Obrigatório</strong></td>
-        <td><strong>Descrição</strong></td>
-      </tr>
-      <tr>
-        <td><i>id_prova</i></td>
-        <td>int</td>
-        <td>Sim</td>
-        <td>Identificador da prova ao qual a resposta corresponde.</td>
-      </tr>
-      <tr>
-        <td><i>matricula_aluno</i></td>
-        <td>int</td>
-        <td>Sim</td>
-        <td>Matricula do aluno que realizou as respostas.</td>        
-      </tr>
-      <tr>
-        <td><i>respostas</i></td>
-        <td>list</td>
-        <td>Sim</td>
-        <td>Respostas do aluno.</td>        
-      </tr>      
-    </table>
-    <h4>Resposta</h4>
-    <p>Cada questão também precisa estar formatada em JSON, seguindo o modelo de dicionários do Python.</p>
-    <table>
-      <tr>
-        <td><strong>Nome</strong></td>
-        <td><strong>Tipo de dado</strong></td>
-        <td><strong>Obrigatório</strong></td>
-        <td><strong>Descrição</strong></td>          
-      </tr>
-      <tr>
-        <td>num_questao</td>
-        <td>int</td>
-        <td>Sim</td>
-        <td>Número da questão.</td>
-      </tr>
-      <tr>
-        <td>alternativa</td>
-        <td>string</td>
-        <td>Sim</td>
-        <td>Alternativa utilizada como resposta para a questão.</td>
-      </tr>      
-    </table>
-    <pre><code>
-    #Ex. Respostas   
-    {
-      "id_prova": 1,
-      "matricula_aluno": 1,
-      "respostas":[
-        {
-            "num_questao": 1,
-            "alternativa": "A"
-        },
-        {
-            "num_questao": 2,
-            "alternativa": "E"
-        }
-      ]
-    }
-    </code></pre>
-  <pre><code>curl --header "Content-Type: application/json" --request POST --data '{respostas_aluno}' http://127.0.0.1:5000/resposta</code></pre>
+<br>
+<section id="/resposta">
+  <h3><code>POST /resposta</code></h3>
+    <p><blockquote>Este endpoint aceita apenas dados formatados em JSON.</blockquote></p>
+    <h4>Parâmetros</h4>
+      <table>
+        <tr>
+          <td><strong>Nome</strong></td>
+          <td><strong>Tipo de dado</strong></td>
+          <td><strong>Obrigatório</strong></td>
+          <td><strong>Descrição</strong></td>
+        </tr>
+        <tr>
+          <td><i>id_prova</i></td>
+          <td>int</td>
+          <td>Sim</td>
+          <td>Identificador da prova ao qual a resposta corresponde.</td>
+        </tr>
+        <tr>
+          <td><i>matricula_aluno</i></td>
+          <td>int</td>
+          <td>Sim</td>
+          <td>Matricula do aluno que realizou as respostas.</td>        
+        </tr>
+        <tr>
+          <td><i>respostas</i></td>
+          <td>list</td>
+          <td>Sim</td>
+          <td>Respostas do aluno.</td>        
+        </tr>      
+      </table>
+      <h4>Resposta</h4>
+      <p>Cada questão também precisa estar formatada em JSON, seguindo o modelo de dicionários do Python.</p>
+      <table>
+        <tr>
+          <td><strong>Nome</strong></td>
+          <td><strong>Tipo de dado</strong></td>
+          <td><strong>Obrigatório</strong></td>
+          <td><strong>Descrição</strong></td>          
+        </tr>
+        <tr>
+          <td>num_questao</td>
+          <td>int</td>
+          <td>Sim</td>
+          <td>Número da questão.</td>
+        </tr>
+        <tr>
+          <td>alternativa</td>
+          <td>string</td>
+          <td>Sim</td>
+          <td>Alternativa utilizada como resposta para a questão.</td>
+        </tr>      
+      </table>
+      <pre><code>
+      #Ex. Respostas   
+      {
+        "id_prova": 1,
+        "matricula_aluno": 1,
+        "respostas":[
+          {
+              "num_questao": 1,
+              "alternativa": "A"
+          },
+          {
+              "num_questao": 2,
+              "alternativa": "E"
+          }
+        ]
+      }
+      </code></pre>
+    <pre><code>curl --header "Content-Type: application/json" --request POST --data '{respostas_aluno}' http://127.0.0.1:5000/resposta</code></pre>
 </section>
+<section id="
