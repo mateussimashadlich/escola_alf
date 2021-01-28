@@ -5,9 +5,12 @@
 <ul>
   <li><a href="https://www.python.org/downloads/">Python</a></li>
   <li><a href="https://flask.palletsprojects.com/en/1.1.x/">Flask</a></li>
+  <li><a href="https://flask-sqlalchemy.palletsprojects.com/en/2.x/">Flask-SQLAlchemy</a></li>
 </ul>
 <p>Com o Python instalado, utilize no seu terminal o comando a seguir para instalar o Flask:</p>
 <p><code>pip install flask</code></p>
+<p>E para o SQLAlchemy:</p>
+<p><code>pip install flask-sqlalchemy</code></p>
 <h2>Utilização</h2>
 <p>Agora para executar a aplicação, vá até a pasta do projeto e digite:</p>
 <p><code>flask run</code></p>
