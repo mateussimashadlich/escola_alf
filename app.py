@@ -2,8 +2,6 @@ from flask import Flask, request, g, jsonify
 from models import db, Prova, Gabarito, Resposta
 from sqlalchemy.exc import IntegrityError
 
-#db.init_app(app)
-
 
 def create_app():
     app = Flask(__name__)
@@ -12,14 +10,15 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
     app.app_context().push()
+
     #Reinica o BD a cada inicialização (a fim de facilitar os testes)
     db.drop_all()
     db.create_all()
     db.session.commit()
+
     return app
 
 app = create_app()
-
 
 @app.route('/prova', methods=['POST'])
 def cadastrar_prova():
@@ -87,9 +86,8 @@ def cadastrar_gabarito():
                         message="Parâmetro especificado inválido",
                         documentacao="https://github.com/mateussimashadlich/escola_alf/blob/master/README.md"
                     ), 400         
-
-
     
+
 @app.route('/resposta', methods=['POST'])
 def cadastrar_resposta():
     try:
@@ -164,11 +162,11 @@ def verificar_nota(matricula_aluno):
 
     return jsonify(nota_final=nota_final)
 
+
 @app.route('/alunos_aprovados', methods=['GET'])
 def get_alunos_aprovados():
     alunos = db.session.query(Prova.matricula_aluno.distinct()).all()
-    for aluno in alunos:        
-        print(type(aluno))
+    for aluno in alunos:
         if verificar_nota(aluno[0]).get_json()['nota_final'] < 7:
             alunos.remove(aluno)
 
