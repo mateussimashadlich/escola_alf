@@ -1,6 +1,4 @@
-import requests
 import unittest
-import json
 import app
 
 class TestApp(unittest.TestCase):
