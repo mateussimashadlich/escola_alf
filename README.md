@@ -48,7 +48,7 @@
         <td>Matricula do aluno que fará a prova</td>
       </tr>      
     </table>
-    <pre><code>curl --header "Content-Type: application/json" --request POST --data '{"id": id, "matricula_aluno": matricula_aluno}" http://127.0.0.1:5000/prova</code></pre>
+    <pre><code>curl --location --request POST 'http://127.0.0.1:5000/prova' --header 'Content-Type: application/json' --data-raw '{"id": x, "matricula_aluno": y}'</code></pre>
     <p>Exemplo de resposta em uma requisição bem-sucedida:</p>
     <pre><code>  
     {
@@ -128,7 +128,7 @@
       ]
     }
     </code></pre>
-  <pre><code>curl --header "Content-Type: application/json" --request POST --data '{gabarito}' http://127.0.0.1:5000/gabarito</code></pre>
+  <pre><code>curl --location --request POST 'http://127.0.0.1:5000/gabarito' --header 'Content-Type: application/json' --data-raw '{"id_prova": x, "questoes": questoes}'</code></pre>
   <p>Exemplo de resposta em uma requisição bem-sucedida:</p>
   <pre><code>  
     {
@@ -205,7 +205,7 @@
           }
         ]
       }</code></pre>
-    <pre><code>curl --header "Content-Type: application/json" --request POST --data '{respostas_aluno}' http://127.0.0.1:5000/resposta</code></pre>
+    <pre><code>curl --location --request POST 'http://127.0.0.1:5000/resposta' --header 'Content-Type: application/json' --data-raw '{"id_prova": x, "matricula_aluno": y, "respostas": respostas}'</code></pre>
   <p>Exemplo de resposta em uma requisição bem-sucedida:</p>
   <pre><code>  
   {
@@ -237,7 +237,7 @@
     "matricula_aluno": 1
   }
   </code></pre>
-  <pre><code>curl -X GET -H "Content-type: application/json" -d '{matricula_aluno}' 'http://127.0.0.1:5000/nota_final'</code></pre>
+  <pre><code>curl --location --request GET 'http://127.0.0.1:5000/nota_final' --header 'Content-Type: application/json' --data-raw '{"matricula_aluno": x}'</code></pre>
   <p>Exemplo de resposta:</p>
   <pre><code>  
   {
@@ -248,9 +248,9 @@
 <section id="/alunos_aprovados">
   <h3><code>GET /alunos_aprovados</code></h3>    
   <p>Lista todos os alunos com média de notas maior ou igual a 7, ou seja, aprovados.</p>
-  <pre><code>curl -X GET 'http://127.0.0.1:5000/alunos_aprovados'</code></pre>
+  <pre><code>curl --location --request GET 'http://127.0.0.1:5000/alunos_aprovados'</code></pre>
   <p>Exemplo de resposta:</p>
-  <pre><code>  
+  <pre><code> 
   {
     "matricula_alunos_aprovados": [1234, 5678]
   }</code></pre>
