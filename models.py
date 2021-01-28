@@ -17,7 +17,4 @@ class Resposta(db.Model):
     matricula_aluno = db.Column(db.Integer, db.ForeignKey(Prova.matricula_aluno), primary_key=True)
     num_questao = db.Column(db.Integer, primary_key=True)
     alternativa = db.Column(db.String(1))
-         
-#FOREIGN KEY(id_prova) REFERENCES gabarito(id_prova),
-#PRIMARY KEY(id_prova, id_aluno, num_questao)
 

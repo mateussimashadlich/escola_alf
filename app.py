@@ -1,6 +1,4 @@
-import sqlite3
 from flask import Flask, request, g, jsonify
-from flask_sqlalchemy import SQLAlchemy
 from models import db, Prova, Gabarito, Resposta
 from sqlalchemy.exc import IntegrityError
 
@@ -10,17 +8,18 @@ from sqlalchemy.exc import IntegrityError
 def create_app():
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///escola_alf.db'
+    #Recurso que não será utilizado e que consome muitos recursos
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
+    app.app_context().push()
+    #Reinica o BD a cada inicialização (a fim de facilitar os testes)
+    db.drop_all()
+    db.create_all()
+    db.session.commit()
     return app
 
 app = create_app()
-app.app_context().push()
 
-#Reinica o BD a cada inicialização
-db.drop_all()
-db.create_all()
-db.session.commit()
 
 @app.route('/prova', methods=['POST'])
 def cadastrar_prova():
@@ -29,8 +28,7 @@ def cadastrar_prova():
             return jsonify(message="Apenas requisições JSON são válidas"), 400 
         
         if Prova.query.filter_by(matricula_aluno=request.json['matricula_aluno']).first() == None and len(db.session.query(Prova.matricula_aluno.distinct()).all()) >= 100:
-            return jsonify(mensagem='A quantidade máxima de 100 alunos já foi atingida')
-
+            return jsonify(mensagem='A quantidade máxima de 100 alunos já foi atingida.')
 
         if Prova.query.filter_by(id=request.json['id'], matricula_aluno=request.json['matricula_aluno']).first() == None:
             prova = Prova(id=request.json['id'], matricula_aluno=request.json['matricula_aluno'])
@@ -38,13 +36,17 @@ def cadastrar_prova():
             db.session.commit()
             return jsonify(message="Prova criada com sucesso!")
 
-        return jsonify(message='Prova ' + str(request.json['id']) + ' já existe para o aluno de matricula + ' + str(request.json['matricula_aluno']) + '.')
+        return jsonify(message='Prova ' + str(request.json['id']) + ' já existe para o aluno de matricula ' + str(request.json['matricula_aluno']) + '.')
 
     except KeyError:
         return jsonify(
                         message="Parâmetro especificado inválido",
                         documentacao="https://github.com/mateussimashadlich/escola_alf/blob/master/README.md"
-                    ), 400                    
+                    ), 400
+    except:
+        db.session.rollback()
+        return cadastrar_prova()
+
 
 @app.route('/gabarito', methods=['POST'])
 def cadastrar_gabarito():
@@ -135,8 +137,8 @@ def get_nota_final_aluno():
     try:
         if request.get_json() == None:            
             return jsonify(message="Apenas requisições JSON são válidas"), 400 
-        if Prova.query.filter_by(id=request.json['matricula_aluno']).first() == None:
-            return jsonify(mensagem='O aluno especificado não existe.'), 404
+        if Prova.query.filter_by(matricula_aluno=request.json['matricula_aluno']).first() == None:
+            return jsonify(mensagem='A matricula especificada não existe.'), 404
 
         return verificar_nota(request.json['matricula_aluno'])
     except KeyError:
@@ -145,8 +147,8 @@ def get_nota_final_aluno():
                         documentacao="https://github.com/mateussimashadlich/escola_alf/blob/master/README.md"
                     ), 400          
 
-def verificar_nota(aluno):
-    provas_aluno = Prova.query.filter_by(aluno=aluno).all()
+def verificar_nota(matricula_aluno):
+    provas_aluno = Prova.query.filter_by(matricula_aluno=matricula_aluno).all()
     nota_final = 0
     for prova in provas_aluno:
         nota_prova = 0
@@ -165,9 +167,11 @@ def verificar_nota(aluno):
 @app.route('/alunos_aprovados', methods=['GET'])
 def get_alunos_aprovados():
     alunos = db.session.query(Prova.matricula_aluno.distinct()).all()
-    for aluno in alunos:
+    for aluno in alunos:        
+        print(type(aluno))
         if verificar_nota(aluno[0]).get_json()['nota_final'] < 7:
             alunos.remove(aluno)
+
     return jsonify(matricula_alunos_aprovados=alunos)
 
 
