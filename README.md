@@ -23,7 +23,13 @@
   <li><a href="#post-resposta">Cadastrar respostas do aluno</a></li>
   <li><a href="#get-nota_final">Verificar nota final do aluno</a></li>
   <li><a href="#get-alunos_aprovados">Listar alunos aprovados</a></li>
+  <li><a href="#get-prova">Listar provas</a></li>
+  <li><a href="#get-gabarito">Listar gabaritos</a></li>
+  <li><a href="#get-resposta">Listar respostas dos alunos</a></li>
+  
 </ul>
+<br>
+<section id="/prova">
 <h3><code>POST /prova</code></h3>
   <p><blockquote>Este endpoint aceita apenas dados formatados em JSON.</blockquote></p>
   <p>Cadastra uma prova com uma matricula de aluno. Não é possível ter mais de 100 alunos diferentes cadastrados em todas as provas.</p>
@@ -53,6 +59,21 @@
     <pre><code>  
     {
       "mensagem": "Prova criada com sucesso!"
+    } 
+    </code></pre>
+<br>
+<h3><code>GET /prova</code></h3>
+  <p>Retorna as provas dos alunos.</p>
+    <pre><code>curl --location --request GET 'http://127.0.0.1:5000/prova'</code></pre>
+    <p>Exemplo de resposta:</p>
+    <pre><code>  
+    {
+      "provas": [
+        {
+          "id": 5,
+          "matricula_aluno": 2
+        }
+      ]
     } 
     </code></pre>
 </section>
@@ -134,6 +155,58 @@
     {
       "mensagem": "Gabarito criado com sucesso!"
     }</code></pre>
+    
+<br>
+<h3><code>GET /gabarito</code></h3>
+  <p>Retorna os gabaritos das provas.</p>
+    <pre><code>curl --location --request GET 'http://127.0.0.1:5000/gabarito'</code></pre>
+    <p>Exemplo de resposta:</p>
+    <pre><code>  
+    {
+      "gabaritos": [
+        {
+            "id_prova": 4,
+            "questoes": [
+                {
+                    "alternativa": "A",
+                    "num_questao": 4,
+                    "peso_questao": 3
+                },
+                {
+                    "alternativa": "A",
+                    "num_questao": 8,
+                    "peso_questao": 3
+                },
+                {
+                    "alternativa": "B",
+                    "num_questao": 9,
+                    "peso_questao": 3
+                }
+            ]
+        },
+        {
+            "id_prova": 5,
+            "questoes": [
+                {
+                    "alternativa": "A",
+                    "num_questao": 4,
+                    "peso_questao": 3
+                },
+                {
+                    "alternativa": "A",
+                    "num_questao": 8,
+                    "peso_questao": 3
+                },
+                {
+                    "alternativa": "B",
+                    "num_questao": 9,
+                    "peso_questao": 3
+                }
+            ]
+        }
+    ]
+  }
+    </code></pre>
 </section>
 <br>
 <section id="/resposta">
@@ -211,6 +284,33 @@
   {
     "mensagem": "Resposta(s) cadastrada(s) com sucesso!"
   }</code></pre>
+ 
+<h3><code>GET /resposta</code></h3>
+  <p>Retorna as respostas dos alunos nas provas.</p>
+    <pre><code>curl --location --request GET 'http://127.0.0.1:5000/resposta'</code></pre>
+    <p>Exemplo de resposta:</p>
+    <pre><code>  
+      {
+        "respostas": [
+            {
+              "matricula_aluno": 2,
+              "respostas_aluno": [
+                {
+                  "alternativa": "A",
+                  "num_questao": 8
+                },
+                {
+                  "alternativa": "A",
+                  "num_questao": 4
+                },
+                {
+                  "alternativa": "B",
+                  "num_questao": 9
+                }
+             }
+          ]
+      }
+    </code></pre>
 </section>
 <section id="/nota_final">
   <h3><code>GET /nota_final</code></h3>
